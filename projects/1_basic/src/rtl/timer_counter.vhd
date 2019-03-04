@@ -26,12 +26,27 @@ END timer_counter;
 
 ARCHITECTURE rtl OF timer_counter IS
 SIGNAL counter_value_r : STD_LOGIC_VECTOR(7 DOWNTO 0);
-
 BEGIN
 
 -- DODATI :
 -- brojac koji na osnovu izbrojanih sekundi pravi izlaz na LE diode
 
-
+	process (clk_i) begin
+		if (rising_edge(clk_i)) then
+			if (rst_i = '1') then
+				counter_value_r <= (others => '0');
+			else
+				if (cnt_rst_i = '1') then
+					counter_value_r <= (others => '0');
+				elsif (cnt_en_i = '1') then
+					if (one_sec_i = '1') then
+						counter_value_r <= counter_value_r + '1';
+					end if;
+				end if;
+			end if;
+		end if;
+	end process;
+	
+	led_o <= counter_value_r;
 
 END rtl;
